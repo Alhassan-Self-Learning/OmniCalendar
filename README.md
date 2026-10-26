@@ -8,8 +8,6 @@ A modern, responsive web app for discovering the special days of the year: UN in
 
 **React · TypeScript · Vite · Tailwind CSS**
 
-You can visit the website from here: https://alhassan-self-learning.github.io/OmniCalendar/
-
 </div>
 
 ---
@@ -38,7 +36,8 @@ Every special day carries a **recognition label** (how official it is), a **date
 ### Personalise
 - **Favorites** with live countdowns ("12 days to go").
 - **Personal collections:** group days your own way, rename them and delete them.
-- **Light, Dark and System themes**, applied before first paint so there is no flash.
+- **Light, Dark, Liquid Glass and System themes**, applied before first paint so there is no flash.
+- **English and Arabic** — see [Languages](#languages-english--arabic) below.
 - Everything is saved in your browser's `localStorage`.
 
 ### Export & share
@@ -50,6 +49,19 @@ Every special day carries a **recognition label** (how official it is), a **date
 - Responsive layout for phone, tablet and desktop, with a floating tab bar on mobile.
 - Accessible by design: semantic landmarks, skip link, focus trap in dialogs, ARIA grid for the calendar, visible focus states, and reduced-motion support.
 - Route-level code splitting for fast first load.
+
+## Languages (English / Arabic)
+
+Switch language from the **Language** menu in the header (the choice is remembered; a first visit follows the browser language).
+
+- **Full Arabic UI and content:** every menu, button, filter, category, recognition level, toast and screen-reader label, plus the name, summary, background, notes and founding body of all special days.
+- **Right-to-left layout:** `<html lang="ar" dir="rtl">` is set before first paint. Layouts mirror through Tailwind's logical utilities (`ms-`/`me-`/`ps-`/`pe-`/`start-`/`end-`), directional icons flip, month slides follow reading direction, and calendar arrow keys follow what's on screen (← is the next day in Arabic).
+- **Typography:** Arabic text uses **IBM Plex Sans Arabic**; Latin text keeps Inter / Plus Jakarta Sans. Arabic gets no letter-spacing (it breaks joining), taller line heights and a slightly larger minimum size.
+- **Dates:** Arabic month names, weeks starting on Saturday (Oman), Arabic plural forms ("يومان"، "٣ أيام"، "١١ يومًا"), and a choice of Arabic-Indic (١٢٣) or Western (123) digits.
+- **Hijri dates:** shown alongside Gregorian dates (Umm al-Qura) in the calendar grid, date tiles, day panel and event pages. On by default in Arabic, optional in English.
+- **Search** matches Arabic names and descriptions in either language.
+
+Translations live in `src/i18n/`: UI strings in `messages/en.ts` (the reference) and `messages/ar.ts` (TypeScript enforces the same keys), event content in `events-ar/`, which is loaded as a separate chunk only when needed. A field without an Arabic translation falls back to English and is marked `lang="en" dir="ltr"`.
 
 ## Data and accuracy
 
@@ -133,6 +145,11 @@ omnicalendar/
 │  │  ├─ ics.ts            iCalendar export
 │  │  ├─ search.ts         Search scoring
 │  │  └─ dates.test.ts     Unit tests
+│  ├─ i18n/
+│  │  ├─ I18nContext.tsx   Language state, <html lang/dir>, event text in the UI language
+│  │  ├─ format.ts         Locale-aware dates, numbers, Hijri, rule descriptions, Arabic plurals
+│  │  ├─ messages/         en.ts (reference) and ar.ts UI strings
+│  │  └─ events-ar/        Arabic event content (lazy-loaded chunk)
 │  ├─ context/             App state: theme, favorites, collections, toasts, "today"
 │  ├─ hooks/               useSurprise, useDocumentTitle
 │  ├─ components/
@@ -180,7 +197,8 @@ once("2027-08-02")           // a single dated event
 1. Only add a day if both its **date** and its **recognition level** can be backed by a source.
 2. Prefer the organiser's own page (un.org, who.int, unesco.org…) as the first source.
 3. Add only years with published dates to lunar `table` rules, and mark moon-sighting dates as estimated.
-4. Run `npm test`. It checks that IDs are unique, every event has a source, and every event resolves to a date.
+4. Add the Arabic text for the new id in `src/i18n/events-ar/` (write digits as 0–9; they are shown in the reader's digit style).
+5. Run `npm test`. It checks that IDs are unique, every event has a source, every event resolves to a date, and every event has an Arabic translation.
 
 ## Deployment
 
@@ -218,4 +236,4 @@ Special-day information is gathered from the [United Nations list of Internation
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+No license has been chosen yet. Add a `LICENSE` file (for example MIT) before sharing the code publicly.
