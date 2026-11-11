@@ -1,0 +1,571 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================================
+   Typography
+   ---------------------------------------------------------------------
+   English → Google Sans (Google Fonts, variable 400–700, see index.html).
+   Arabic  → IBM Plex Sans Arabic, self-hosted as its Arabic subset (OFL, see assets/fonts).
+   Plex is declared with an explicit Arabic unicode-range and listed FIRST in every stack, so each
+   character picks its font by script: Arabic always renders in Plex — even if Google Sans gains
+   Arabic glyphs later — and everything else renders in Google Sans. Both faces share the same
+   files, so the browser downloads each weight at most once, and only when Arabic is on screen.
+   The stack follows the nearest [lang] attribute, so English islands inside Arabic pages
+   (brand name, source titles, tags) get the English stack and vice versa.
+   ===================================================================== */
+/* Arabic UI: Arabic letters, Arabic-Indic digits, Arabic punctuation and the spaces between Arabic words. */
+@font-face {
+  font-family: "OC Plex Arabic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-400.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+0020, U+00A0;
+}
+@font-face {
+  font-family: "OC Plex Arabic";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-500.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+0020, U+00A0;
+}
+@font-face {
+  font-family: "OC Plex Arabic";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-600.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+0020, U+00A0;
+}
+@font-face {
+  font-family: "OC Plex Arabic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-700.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+0020, U+00A0;
+}
+/* English UI: Arabic characters only — Latin text and spaces always stay in Google Sans. */
+@font-face {
+  font-family: "OC Plex Arabic Glyphs";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-400.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "OC Plex Arabic Glyphs";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-500.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "OC Plex Arabic Glyphs";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-600.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "OC Plex Arabic Glyphs";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/ibm-plex-sans-arabic/plex-arabic-700.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+:root, [lang="en"] {
+  --font-stack: "OC Plex Arabic Glyphs", "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+[lang="ar"] {
+  --font-stack: "OC Plex Arabic", "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+}
+[lang] { font-family: var(--font-stack); }
+
+
+/* =====================================================================
+   OmniCalendar — "red-letter days" design tokens (see DESIGN.md)
+   ---------------------------------------------------------------------
+   A two-colour print job: paper, ink and calendar red.
+     bg        the desk the paper lies on
+     band      a section laid on a slightly deeper desk tone
+     surface   paper: leaves, slips, panels, inputs
+     surface-2 raised paper / wells / hover
+     surface-3 the strongest neutral fill (empty heat-map cells, pad edges)
+     primary   calendar red — only on marks: holidays, today, the current place, the one main action
+     primary-soft / -track / -ink   its pale tints, which carry every area (selected day, active filter)
+   Nothing rests on a shadow: paper is separated from the desk by tone and a hairline edge.
+   ===================================================================== */
+@layer base {
+  :root {
+    --bg: 242 242 240;
+    --band: 234 234 231;
+    --surface: 255 255 255;
+    --surface-2: 247 247 245;
+    --surface-3: 230 230 226;
+    --fg: 20 20 20;
+    --muted: 91 91 88;            /* 6.4:1 on paper, 5.8:1 on the desk */
+    --border: 227 227 223;
+    --border-strong: 196 196 190;
+    --primary: 200 16 46;         /* calendar red, 5.9:1 on paper */
+    --primary-fg: 255 255 255;
+    --primary-soft: 252 240 242;
+    --primary-track: 244 205 212;
+    --primary-ink: 125 10 28;
+    --accent: 200 16 46;
+    --danger: 200 16 46;
+    --field-ground: 200 16 46;    /* the one solid red band of a page */
+    --field-ink: 255 255 255;
+
+    --shadow-ink: 20 20 20;
+    --shadow-card: none;
+    --shadow-control: none;
+    --shadow-lift: none;
+    --shadow-float: 0 18px 48px -18px rgb(var(--shadow-ink) / 0.28), 0 2px 8px rgb(var(--shadow-ink) / 0.06);
+    color-scheme: light;
+  }
+
+  /* Dark: true neutral blacks (no navy); elevation is a lightness step, red is lifted for contrast. */
+  .dark {
+    --bg: 14 14 14;
+    --band: 19 19 19;
+    --surface: 27 27 27;
+    --surface-2: 35 35 35;
+    --surface-3: 50 50 50;
+    --fg: 241 241 239;
+    --muted: 166 166 162;         /* 7.4:1 on paper */
+    --border: 46 46 46;
+    --border-strong: 74 74 74;
+    --primary: 255 92 108;        /* 6.2:1 on dark paper */
+    --primary-fg: 24 4 8;
+    --primary-soft: 42 20 24;
+    --primary-track: 90 29 38;
+    --primary-ink: 255 179 187;
+    --accent: 255 92 108;
+    --danger: 255 92 108;
+    --field-ground: 120 12 30;
+    --field-ink: 255 255 255;
+
+    --shadow-ink: 0 0 0;
+    --shadow-float: 0 22px 56px -16px rgb(0 0 0 / 0.75), 0 2px 10px rgb(0 0 0 / 0.4);
+    color-scheme: dark;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-bg text-fg font-sans antialiased; font-size: 1rem; line-height: 1.6; }
+  h1, h2, h3 { @apply font-display; text-wrap: balance; letter-spacing: -0.015em; }
+  p, li, dd { text-wrap: pretty; }
+  :focus-visible { @apply outline-none ring-2 ring-fg ring-offset-2 ring-offset-bg; }
+  ::selection { background: rgb(var(--primary) / 0.22); }
+  time, .tabular-nums, .num { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  /* ---------- Frame ---------- */
+  /* One frame for every page: a 1280px column with equal margins on both sides. */
+  .container-page { @apply mx-auto w-full max-w-[80rem] px-5 sm:px-8 lg:px-10; }
+  .section { @apply py-16 sm:py-20 lg:py-24; }
+  .band { @apply bg-band; }
+
+  /* Inner-page header: the page's name set large on the desk, nothing behind it. */
+  .page-hero { @apply relative; }
+
+  /* ---------- Type ---------- */
+  .page-title { @apply text-[clamp(2.25rem,4.4vw,3.75rem)] font-bold leading-[1.04] tracking-[-0.03em]; }
+  .section-title { @apply text-[1.625rem] font-bold leading-tight tracking-[-0.02em] sm:text-section; }
+  .lead { @apply max-w-[62ch] text-[1.0625rem] leading-relaxed text-fg/80 sm:text-lead; }
+  .meta-label { @apply text-meta font-medium text-muted; }
+
+  /* ---------- Paper ---------- */
+  .card { @apply rounded border border-transparent bg-surface; }
+  .card-interactive {
+    @apply transition-[transform,border-color,background-color] ease-out hover:-translate-y-0.5 hover:border-border-strong;
+  }
+  .card-interactive:active { transform: translateY(0) scale(0.995); transition-duration: 80ms; }
+  .well { @apply rounded bg-surface-2; }
+  /* Floating chrome (menus, toasts, the phone tab bar): opaque paper with a real shadow — it floats. */
+  .glass { @apply border border-border bg-surface shadow-float; }
+
+  /* Perforation: the tear line between the parts of a leaf or a stub. */
+  .perf { border-top: 3px dotted rgb(var(--border-strong)); }
+  .perf-start { border-inline-start: 3px dotted rgb(var(--border-strong)); }
+
+  /* Category stamp: an 8px square of the category's ink, always next to its name. */
+  .stamp { @apply inline-block size-2 shrink-0 rounded-[1px]; }
+
+  /* ---------- Chips ---------- */
+  .chip { @apply inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-meta font-medium; }
+  .chip-toggle {
+    @apply chip pressable border border-border bg-surface px-2.5 py-1 text-fg hover:border-border-strong hover:bg-surface-2;
+  }
+  .chip-toggle[aria-pressed="true"] { @apply border-primary/40 bg-primary-soft text-primary-ink hover:bg-primary-soft; }
+  .dark .chip-toggle[aria-pressed="true"] { @apply text-primary-ink; }
+
+  /* ---------- Fields ---------- */
+  .field {
+    @apply h-11 w-full rounded border border-border-strong bg-surface px-3.5 text-[0.9375rem] text-fg outline-none transition-[border-color,box-shadow]
+      placeholder:text-muted hover:border-fg/40 focus:border-fg focus-visible:ring-2 focus-visible:ring-fg/15 focus-visible:ring-offset-0;
+  }
+  .field-pill { }
+  select.field {
+    @apply cursor-pointer appearance-none pe-9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b5b58' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  [dir="rtl"] select.field { background-position: left 0.75rem center; }
+  .dark select.field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a6a6a2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+  .dark input[type="date"].field::-webkit-calendar-picker-indicator { filter: invert(0.8); }
+
+  /* ---------- Segmented control: the active segment is printed in ink ---------- */
+  .segmented { @apply inline-flex items-center gap-0.5 rounded border border-border bg-surface-2 p-0.5; }
+  .segmented-item {
+    @apply inline-flex items-center gap-1.5 rounded-sm px-3.5 py-1.5 text-sm font-medium text-muted pressable hover:text-fg focus-visible:ring-offset-0;
+  }
+  .segmented-item[aria-pressed="true"],
+  .segmented-item[aria-selected="true"] { @apply bg-fg text-bg hover:text-bg; }
+
+  /* ---------- Navigation: plain words, the current page carries the red "today" dot ---------- */
+  .nav-link { @apply pressable relative inline-flex items-center rounded px-3 py-2 text-[0.9375rem] font-medium text-muted hover:text-fg; }
+  .nav-link[aria-current="page"] { @apply text-fg; }
+  .nav-link[aria-current="page"]::after {
+    content: "";
+    @apply absolute bottom-0.5 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-primary;
+  }
+
+  /* =================================================================
+     The leaf — OmniCalendar's object. A page of the tear-off pad:
+     an ink binding band with two punched holes, the numeral, the day in
+     two scripts, a perforation and the day's note. The pad's lower
+     pages show as filled paper edges beneath it.
+     ================================================================= */
+  .leaf { @apply relative isolate flex flex-col rounded-sm bg-surface text-fg; }
+  .leaf-pad::before,
+  .leaf-pad::after {
+    content: "";
+    position: absolute;
+    inset-inline: 6px;
+    z-index: -1;
+    border-radius: 0 0 2px 2px;
+    background: rgb(var(--surface-3));
+  }
+  .leaf-pad::before { bottom: -6px; height: 20px; inset-inline: 4px; background: rgb(var(--border-strong) / 0.55); }
+  .leaf-pad::after { bottom: -12px; height: 20px; inset-inline: 10px; background: rgb(var(--border-strong) / 0.35); }
+  .leaf-binding { @apply relative flex items-center justify-between gap-3 rounded-t-sm bg-fg text-bg; }
+  /* Punched holes: two circles of the desk colour through the binding. */
+  .leaf-binding::before,
+  .leaf-binding::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: var(--hole-size, 8px);
+    height: var(--hole-size, 8px);
+    border-radius: 9999px;
+    background: rgb(var(--bg));
+    transform: translateY(-50%);
+  }
+  .leaf-binding::before { left: var(--hole, 10px); }
+  .leaf-binding::after { right: var(--hole, 10px); }
+  .band .leaf-binding::before, .band .leaf-binding::after { background: rgb(var(--band)); }
+  .leaf-numeral { @apply font-bold leading-[0.82] tracking-[-0.06em] tabular-nums; }
+  .leaf-red { color: rgb(var(--primary)); }
+
+  /* Stub: a small leaf for lists (month over day), with a torn edge. */
+  .stub { @apply flex w-14 shrink-0 flex-col items-center overflow-hidden rounded-sm border border-border bg-surface text-center leading-none; }
+  .stub-month { @apply w-full bg-fg py-1 text-[0.6875rem] font-semibold text-bg; }
+  .stub-day { @apply pt-1.5 text-[1.375rem] font-bold tabular-nums; }
+  .stub-week { @apply w-full truncate px-0.5 pb-1.5 pt-0.5 text-[0.6875rem] text-muted; }
+  .stub-red .stub-month { @apply bg-primary text-primary-fg; }
+  .stub-red .stub-day { @apply text-primary; }
+}
+
+/* =====================================================================
+   Arabic & right-to-left
+   ---------------------------------------------------------------------
+   Layout mirrors through logical utilities (ms-/me-/ps-/pe-/start-/end-) and <html dir="rtl">;
+   this block covers what logical properties can't: Arabic typography and direction-aware motion.
+   Everything keys off :lang(ar) / [dir="rtl"], so it applies equally in every theme.
+   ===================================================================== */
+@layer base {
+  html:lang(ar) body { line-height: 1.75; }
+  /* Arabic is a joined script: letter-spacing breaks the joins, uppercase does nothing. */
+  :lang(ar) { letter-spacing: 0 !important; }
+  :lang(ar) :is(h1, h2) { line-height: 1.4; }
+  :lang(ar) h3 { line-height: 1.55; }
+}
+
+/* Arabic glyphs read smaller than Latin at the same size: the smallest steps move up a notch. */
+:lang(ar) :is(.text-xs, .text-meta, .meta-label) { font-size: 0.875rem; line-height: 1.4rem; }
+:lang(ar) .text-\[11px\], :lang(ar) .text-\[0\.6875rem\] { font-size: 12px; line-height: 1.45; }
+:lang(ar) .text-\[10px\] { font-size: 11px; line-height: 1.45; }
+:lang(ar) :is(.leading-tight, .leading-snug) { line-height: 1.55; }
+:lang(ar) .leading-relaxed { line-height: 1.9; }
+:lang(ar) .leading-none:not(.tabular-nums) { line-height: 1.35; }
+:lang(ar) :is(.page-title, .text-display) { line-height: 1.3; }
+:lang(ar) .section-title { line-height: 1.45; }
+:lang(ar) .stub-month { padding-block: 0.125rem; }
+:lang(ar) .grid-chip { padding-block: 0.125rem; }
+@media (min-width: 640px) {
+  :lang(ar) .sm\:text-sm { font-size: 0.875rem; line-height: 1.4rem; }
+}
+
+/* Month/year slides follow reading direction: "next" enters from the left in Arabic. */
+[dir="rtl"] .animate-slide-next { animation-name: slide-prev; }
+[dir="rtl"] .animate-slide-prev { animation-name: slide-next; }
+[dir="rtl"] .animate-leaf-out { animation-name: leaf-out-rtl; }
+@keyframes leaf-out-rtl { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-14px) rotate(2deg); } }
+
+/* Numbers and dates keep their own order inside right-to-left sentences. */
+time, .tabular-nums { unicode-bidi: isolate; }
+
+/* =====================================================================
+   Motion
+   ---------------------------------------------------------------------
+   Transform + opacity only; things arrive with --ease-out (≤ 320ms) and leave with --ease-in
+   (120–260ms); state changes use --ease-standard (180ms). Nothing blocks input, focus rings
+   appear instantly, and everything is removed under prefers-reduced-motion.
+   ===================================================================== */
+@layer base {
+  :root {
+    --ease-standard: cubic-bezier(.2, 0, 0, 1);
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --ease-in: cubic-bezier(.4, 0, 1, 1);
+    --dur-press: 120ms;
+    --dur-state: 180ms;
+    --dur-panel: 240ms;
+  }
+}
+@layer components {
+  .pressable {
+    transition: transform var(--dur-press) var(--ease-standard), background-color var(--dur-state) var(--ease-standard),
+      color var(--dur-state) var(--ease-standard), box-shadow var(--dur-state) var(--ease-standard), border-color var(--dur-state) var(--ease-standard);
+  }
+  .pressable:active { transform: scale(0.97); transition-duration: 80ms; }
+  .segmented-item:active { transform: scale(0.97); }
+
+  .loading-fallback { animation: fade-in var(--dur-state) var(--ease-out) 250ms both; }
+
+  .motion-menu[data-state="open"] { @apply animate-menu-in; }
+  .motion-menu[data-state="closed"] { @apply pointer-events-none animate-menu-out; }
+  .motion-scrim[data-state="open"] { @apply animate-fade-in; }
+  .motion-scrim[data-state="closed"] { @apply pointer-events-none animate-fade-out; }
+  .motion-dialog[data-state="open"] { @apply animate-sheet-in sm:animate-dialog-in; }
+  .motion-dialog[data-state="closed"] { @apply pointer-events-none animate-sheet-out sm:animate-dialog-out; }
+}
+
+/* Scroll reveal: a section's parts rise in order — heading, then text, then the rest.
+   The hidden start state exists only when motion is welcome, so content never depends on script. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] > * { transition: opacity 420ms var(--ease-out), transform 520ms var(--ease-out); }
+  [data-reveal="pending"] > * { opacity: 0; transform: translateY(18px); }
+  [data-reveal="shown"] > :nth-child(2) { transition-delay: 70ms; }
+  [data-reveal="shown"] > :nth-child(3) { transition-delay: 140ms; }
+  [data-reveal="shown"] > :nth-child(n + 4) { transition-delay: 210ms; }
+}
+@media print {
+  [data-reveal] > * { opacity: 1 !important; transform: none !important; }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: var(--dur-panel); animation-timing-function: var(--ease-standard); }
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: background-color var(--dur-panel) var(--ease-standard), border-color var(--dur-panel) var(--ease-standard),
+    color var(--dur-panel) var(--ease-standard), fill var(--dur-panel) var(--ease-standard) !important;
+}
+
+/* =====================================================================
+   Liquid Glass theme (opt-in: html.theme-glass, on top of light or dark)
+   ---------------------------------------------------------------------
+   The paper turns to frosted glass. Same tokens and the same red; three intensities:
+     pane    every card and leaf — translucent paper with a bright rim
+     raised  the featured leaf — pane + a light blur
+     chrome  header, tab bar, menus, dialogs, toasts — the strongest frost
+   Behind everything sits a fixed, quiet field (one warm and one cool light) for the frost to catch.
+   ===================================================================== */
+@layer base {
+  .theme-glass {
+    --bg: 236 237 240;
+    --band: 255 255 255;
+    --surface: 255 255 255;
+    --surface-2: 244 245 248;
+    --surface-3: 222 224 230;
+    --fg: 16 16 18;
+    --muted: 72 72 78;
+    --border: 255 255 255;
+    --border-strong: 186 188 196;
+    --primary: 190 12 40;
+
+    --surface-alpha: 0.58;
+    --surface-2-alpha: 0.5;
+    --surface-3-alpha: 0.7;
+    --band-alpha: 0.28;
+
+    --glass-edge: 255 255 255 / 0.85;
+    --glass-edge-dim: 255 255 255 / 0.35;
+    --glass-chrome: 0.62;
+    --glass-blur: 22px;
+    --glass-saturate: 165%;
+    --field-a: 255 120 130;
+    --field-b: 150 170 210;
+    --field-strength: 0.32;
+
+    --shadow-ink: 30 32 46;
+    --shadow-card: 0 1px 2px rgb(var(--shadow-ink) / 0.05), 0 10px 26px -18px rgb(var(--shadow-ink) / 0.3);
+    --shadow-float: 0 24px 56px -18px rgb(var(--shadow-ink) / 0.32), 0 4px 14px rgb(var(--shadow-ink) / 0.08);
+  }
+  .theme-glass.dark {
+    --bg: 10 10 12;
+    --band: 40 40 44;
+    --surface: 40 40 44;
+    --surface-2: 52 52 58;
+    --surface-3: 66 66 74;
+    --fg: 242 242 244;
+    --muted: 176 176 184;
+    --border: 255 255 255;
+    --border-strong: 96 96 106;
+    --primary: 255 96 112;
+
+    --surface-alpha: 0.5;
+    --surface-2-alpha: 0.45;
+    --surface-3-alpha: 0.6;
+    --band-alpha: 0.25;
+
+    --glass-edge: 255 255 255 / 0.14;
+    --glass-edge-dim: 255 255 255 / 0.05;
+    --glass-chrome: 0.55;
+    --field-a: 170 20 46;
+    --field-b: 40 60 110;
+    --field-strength: 0.42;
+
+    --shadow-ink: 0 0 0;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35), 0 12px 28px -16px rgb(0 0 0 / 0.6);
+    --shadow-float: 0 28px 60px -16px rgb(0 0 0 / 0.75), 0 4px 14px rgb(0 0 0 / 0.35);
+  }
+
+  .theme-glass body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(52vmax 44vmax at 8% 4%, rgb(var(--field-a) / var(--field-strength)), transparent 70%),
+      radial-gradient(56vmax 46vmax at 96% 96%, rgb(var(--field-b) / var(--field-strength)), transparent 70%);
+  }
+  .theme-glass option { background-color: rgb(var(--surface-solid)); color: rgb(var(--fg)); }
+  .theme-glass { --surface-solid: 250 250 252; }
+  .theme-glass.dark { --surface-solid: 28 28 32; }
+}
+
+@layer components {
+  .theme-glass :is(.card, .leaf, .stub) {
+    border-color: rgb(var(--glass-edge));
+    border-bottom-color: rgb(var(--glass-edge-dim));
+    box-shadow: var(--shadow-card);
+  }
+  .theme-glass .leaf { border: 1px solid rgb(var(--glass-edge)); }
+  .theme-glass .leaf-binding::before, .theme-glass .leaf-binding::after { background: rgb(var(--surface-3)); }
+  .theme-glass .leaf-pad::before, .theme-glass .leaf-pad::after { background: rgb(255 255 255 / 0.35); }
+  .theme-glass.dark .leaf-pad::before, .theme-glass.dark .leaf-pad::after { background: rgb(255 255 255 / 0.08); }
+  .theme-glass .card-feature {
+    -webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturate));
+    backdrop-filter: blur(14px) saturate(var(--glass-saturate));
+  }
+
+  .theme-glass .glass,
+  .theme-glass .app-bar,
+  .theme-glass .dialog-panel {
+    background-color: rgb(var(--surface) / var(--glass-chrome));
+    border: 1px solid rgb(var(--glass-edge));
+    border-bottom-color: rgb(var(--glass-edge-dim));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  }
+  .theme-glass .glass, .theme-glass .dialog-panel { box-shadow: var(--shadow-float); }
+  .theme-glass .app-bar { border-inline: 0; border-top: 0; }
+  .theme-glass .dialog-panel { background-color: rgb(var(--surface) / calc(var(--glass-chrome) + 0.22)); }
+  .theme-glass .dialog-scrim {
+    background: rgb(var(--bg) / 0.35);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .theme-glass.dark .dialog-scrim { background: rgb(0 0 0 / 0.45); }
+
+  .theme-glass .field { border-color: rgb(var(--glass-edge)); background-color: rgb(var(--surface) / 0.7); }
+  .theme-glass .field:hover { border-color: rgb(var(--border-strong)); }
+  .theme-glass .field:focus { border-color: rgb(var(--fg)); }
+  .theme-glass .segmented { border-color: rgb(var(--glass-edge-dim)); }
+  .theme-glass .chip-toggle:not([aria-pressed="true"]) { border-color: rgb(var(--glass-edge)); }
+  .theme-glass .perf { border-top-color: rgb(var(--fg) / 0.22); }
+  .theme-glass .perf-start { border-inline-start-color: rgb(var(--fg) / 0.22); }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .theme-glass, .theme-glass.dark { --glass-chrome: 0.94; --surface-alpha: 0.9; --surface-2-alpha: 0.86; --band-alpha: 0.6; }
+  .theme-glass .dialog-scrim { background: rgb(0 0 0 / 0.4); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-glass, .theme-glass.dark { --glass-chrome: 0.96; --surface-alpha: 0.94; --surface-2-alpha: 0.9; --band-alpha: 0.7; --field-strength: 0.14; }
+  .theme-glass :is(.glass, .app-bar, .dialog-panel, .card-feature) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (max-width: 640px) {
+  .theme-glass, .theme-glass.dark { --glass-blur: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Phone tab bar: the current tab is in ink and carries the red dot. */
+@layer components {
+  .tab-link[aria-current="page"] { color: rgb(var(--fg)); }
+  .tab-link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    left: 50%;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background: rgb(var(--primary));
+    transform: translateX(-50%);
+  }
+  .theme-glass .app-tabbar {
+    background-color: rgb(var(--surface) / var(--glass-chrome));
+    border-top-color: rgb(var(--glass-edge));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  }
+}
+
+/* A leaf laid on the red field: its punched holes show the field. */
+.on-field .leaf-binding::before, .on-field .leaf-binding::after { background: rgb(var(--field-ground)); }
+.on-field .leaf-pad::before { background: rgb(0 0 0 / 0.22); }
+.on-field .leaf-pad::after { background: rgb(0 0 0 / 0.14); }
+
+/* The footer is always printed in ink with paper-coloured type, in every theme. */
+.site-footer { --fg: 20 20 20; --bg: 241 241 239; }
+.dark .site-footer { --fg: 24 24 24; --bg: 241 241 239; }
+.theme-glass .site-footer { --fg: 16 16 18; }
+/* A leaf laid on the red field stays opaque paper, even in Liquid Glass. */
+.on-field .leaf { background: rgb(var(--surface-solid, var(--surface))); }
